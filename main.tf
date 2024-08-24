@@ -24,17 +24,28 @@ output "instance_ip" {
   value = aws_instance.web.public_ip
 }
 
-resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-}
-
 provisioner "file" {
-  source      = "C:\Users\dell\Desktop/index.html"
+  source      = "/root/index.html"
   destination = "/var/www/html/index.html"
   connection {
     type     = "ssh"
     user     = "ubuntu"
     private_key = file("~/.ssh/authorized_keys")
+  }
+}
+
+provisioner "remote-exec" {
+  inline = [
+    "sudo apt-get update",
+    "sudo apt-get install apache2 -y",
+    "sudo systemctl start apache2",
+    "sudo systemctl enable apache2",
+  ]
+
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    private_key = file("~/.ssh/authorized_keys")
+    host        = aws_instance.web.public_ip
   }
 }
