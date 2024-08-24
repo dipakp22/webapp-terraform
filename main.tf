@@ -23,3 +23,18 @@ resource "aws_instance" "web" {
 output "instance_ip" {
   value = aws_instance.web.public_ip
 }
+
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+}
+
+provisioner "file" {
+  source      = "C:\Users\dell\Desktop/index.html"
+  destination = "/var/www/html/index.html"
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    private_key = file("~/.ssh/authorized_keys")
+  }
+}
