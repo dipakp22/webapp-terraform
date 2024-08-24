@@ -18,16 +18,6 @@ resource "aws_instance" "web" {
   tags = {
     Name = "WebServer"
   }
-
-  key_name = "dipak-key"  # Replace with your key pair name
-
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update
-              apt-get install -y apache2
-              systemctl start apache2
-              systemctl enable apache2
-              EOF
 }
 
 output "instance_ip" {
